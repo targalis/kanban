@@ -1,0 +1,160 @@
+ul{
+	padding: 0;
+	margin: 0;
+}
+
+li{
+	list-style: none;
+}
+
+.overflow-wrapper{
+	overflow-x: auto;
+	overflow-y: hidden;
+	height: 100%;
+	background-color: indigo;
+}
+
+.overflow-container{
+	height: 100%;
+}
+
+.overflow-cell{
+	position: relative;
+	float: left;
+	height: 100%;
+	width: 270px;
+	background-color: purple;
+	margin-left: 10px;
+}
+
+.overflow-panel{
+	position: absolute;
+	width: 100%;
+	padding: 2px;
+	background-color: #ccc;
+}
+
+.overflow-panel-title{
+	position: relative;
+	height: 25px;
+	font-weight: 700;
+	padding-left: 5px;
+}
+
+.overflow-panel-content{
+	overflow-x: hidden;
+	overflow-y: auto;
+	min-height: 50px;
+}
+
+.overflow-panel-option{
+	position: relative;
+	height: 40px;
+	padding-top: 10px;
+	padding-left: 5px;
+	color: gray;
+}
+
+.overflow-add-panel {
+	position: absolute;
+	background-color: #ddd;
+	top: 60px;
+	right: 10px;
+}
+
+/* Sticky footer styles
+-------------------------------------------------- */
+html,body {
+  position: relative;
+  height: 100%;
+}
+
+.footer {
+  position: absolute;
+  bottom: 0;
+  width: 100%;
+  /* Set the fixed height of the footer here */
+  height: 20px;
+  background-color: #f5f5f5;
+}
+
+
+/* Custom page CSS
+-------------------------------------------------- */
+/* Not required for template or sticky footer method. */
+
+.container-margin-10{
+  top: 100px;
+  /*margin-bottom: 10px;*/
+}
+
+.footer > .container {
+  padding-right: 15px;
+  padding-left: 15px;
+}
+
+.footer > .container .text-muted {
+  margin: 0;
+}
+
+/* panel card */
+.panel-card {
+	border-radius: 2px;
+	margin: 0px 5px 10px;
+	background-color: #fff;
+}
+
+.new-panel-form input[type="text"]{
+	width: 100%;
+	border: none;
+	background-color: transparent;
+	padding: 0;
+}
+
+.new-card-form input[type="text"]{
+	width: 100%;
+	border: none;
+}
+
+.new-card-form .title-wrapper{
+	padding: 5px 5px 25px;
+}
+
+.new-card-form .submit-wrapper{
+	background-color: #ddd;
+	padding-top: 5px;
+}
+
+.panel-card-logo{
+	
+}
+
+.panel-card-etiquettes{
+	padding: 5px;
+}
+
+.panel-card-etiquettes-etiquette{
+	display: inline-block;
+	height: 20px;
+	width: 20px;
+	margin: 0
+}
+
+.panel-card-title{
+	padding: 5px;
+}
+
+.panel-card-info{
+	padding: 5px;
+}
+
+.panel-card-info-members{
+	display: inline-block;
+	text-align: right;
+	padding-top: 5px;
+}
+
+.panel-card-info-members>.label{
+	background-color: #ccc;
+	color: #000;
+}

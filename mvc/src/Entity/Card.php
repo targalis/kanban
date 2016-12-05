@@ -1,0 +1,481 @@
+<?php
+
+namespace Entity;
+
+use Doctrine\ORM\Mapping as ORM;
+
+/**
+ * Card
+ *
+ * @ORM\Table(name="card", indexes={@ORM\Index(name="fk_card_1_idx", columns={"panel"})})
+ * @ORM\Entity
+ */
+class Card
+{
+    /**
+     * @var integer
+     *
+     * @ORM\Column(name="id", type="integer", nullable=false)
+     * @ORM\Id
+     * @ORM\GeneratedValue(strategy="IDENTITY")
+     */
+    private $id;
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="title", type="string", length=45, nullable=false)
+     */
+    private $title;
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="image", type="string", length=45, nullable=true)
+     */
+    private $image;
+
+    /**
+     * @var integer
+     *
+     * @ORM\Column(name="position", type="integer", nullable=true)
+     */
+    private $position;
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="description", type="text", nullable=true)
+     */
+    private $description;
+
+    /**
+     * @var \DateTime
+     *
+     * @ORM\Column(name="deadline", type="date", nullable=true)
+     */
+    private $deadline;
+
+    /**
+     * @var integer
+     *
+     * @ORM\Column(name="status", type="integer", nullable=true)
+     */
+    private $status;
+
+    /**
+     * @var \Entity\Panel
+     *
+     * @ORM\ManyToOne(targetEntity="Entity\Panel")
+     * @ORM\JoinColumns({
+     *   @ORM\JoinColumn(name="panel", referencedColumnName="id")
+     * })
+     */
+    private $panel;
+
+    /**
+     * @var \Doctrine\Common\Collections\Collection
+     *
+     * @ORM\ManyToMany(targetEntity="Entity\Etiquette", inversedBy="card")
+     * @ORM\JoinTable(name="card_etiquette",
+     *   joinColumns={
+     *     @ORM\JoinColumn(name="card", referencedColumnName="id")
+     *   },
+     *   inverseJoinColumns={
+     *     @ORM\JoinColumn(name="etiquette", referencedColumnName="id")
+     *   }
+     * )
+     */
+    private $etiquette;
+
+    /**
+     * @var \Doctrine\Common\Collections\Collection
+     *
+     * @ORM\ManyToMany(targetEntity="Entity\Member", inversedBy="card")
+     * @ORM\JoinTable(name="card_member",
+     *   joinColumns={
+     *     @ORM\JoinColumn(name="card", referencedColumnName="id")
+     *   },
+     *   inverseJoinColumns={
+     *     @ORM\JoinColumn(name="member", referencedColumnName="id")
+     *   }
+     * )
+     */
+    private $member;
+
+    /**
+     * @ORM\OneToMany(targetEntity="Attachment", mappedBy="card")
+     */
+    private $attachment;
+    
+    /**
+     * @ORM\OneToMany(targetEntity="Comment", mappedBy="card")
+     */
+    private $comment;
+
+    /**
+     * @ORM\OneToMany(targetEntity="Checklist", mappedBy="card")
+     */
+    private $checklist;
+
+    /**
+     * Constructor
+     */
+    public function __construct()
+    {
+        $this->etiquette = new \Doctrine\Common\Collections\ArrayCollection();
+        $this->member = new \Doctrine\Common\Collections\ArrayCollection();
+        $this->attachment = new \Doctrine\Common\Collections\ArrayCollection();
+        $this->comment = new \Doctrine\Common\Collections\ArrayCollection();
+        $this->checklist = new \Doctrine\Common\Collections\ArrayCollection();
+    }
+
+
+    /**
+     * Get id
+     *
+     * @return integer
+     */
+    public function getId()
+    {
+        return $this->id;
+    }
+
+    /**
+     * Set title
+     *
+     * @param string $title
+     *
+     * @return Card
+     */
+    public function setTitle($title)
+    {
+        $this->title = $title;
+
+        return $this;
+    }
+
+    /**
+     * Get title
+     *
+     * @return string
+     */
+    public function getTitle()
+    {
+        return $this->title;
+    }
+
+    /**
+     * Set image
+     *
+     * @param string $image
+     *
+     * @return Card
+     */
+    public function setImage($image)
+    {
+        $this->image = $image;
+
+        return $this;
+    }
+
+    /**
+     * Get image
+     *
+     * @return string
+     */
+    public function getImage()
+    {
+        return $this->image;
+    }
+
+    /**
+     * Set position
+     *
+     * @param integer $position
+     *
+     * @return Card
+     */
+    public function setPosition($position)
+    {
+        $this->position = $position;
+
+        return $this;
+    }
+
+    /**
+     * Get position
+     *
+     * @return integer
+     */
+    public function getPosition()
+    {
+        return $this->position;
+    }
+
+    /**
+     * Set description
+     *
+     * @param string $description
+     *
+     * @return Card
+     */
+    public function setDescription($description)
+    {
+        $this->description = $description;
+
+        return $this;
+    }
+
+    /**
+     * Get description
+     *
+     * @return string
+     */
+    public function getDescription()
+    {
+        return $this->description;
+    }
+
+    /**
+     * Set deadline
+     *
+     * @param \DateTime $deadline
+     *
+     * @return Card
+     */
+    public function setDeadline($deadline)
+    {
+        $this->deadline = $deadline;
+
+        return $this;
+    }
+
+    /**
+     * Get deadline
+     *
+     * @return \DateTime
+     */
+    public function getDeadline()
+    {
+        return $this->deadline;
+    }
+
+    /**
+     * Set status
+     *
+     * @param integer $status
+     *
+     * @return Card
+     */
+    public function setStatus($status)
+    {
+        $this->status = $status;
+
+        return $this;
+    }
+
+    /**
+     * Get status
+     *
+     * @return integer
+     */
+    public function getStatus()
+    {
+        return $this->status;
+    }
+
+    /**
+     * Set panel
+     *
+     * @param \Entity\Panel $panel
+     *
+     * @return Card
+     */
+    public function setPanel(\Entity\Panel $panel = null)
+    {
+        $this->panel = $panel;
+
+        return $this;
+    }
+
+    /**
+     * Get panel
+     *
+     * @return \Entity\Panel
+     */
+    public function getPanel()
+    {
+        return $this->panel;
+    }
+
+    /**
+     * Add etiquette
+     *
+     * @param \Entity\Etiquette $etiquette
+     *
+     * @return Card
+     */
+    public function addEtiquette(\Entity\Etiquette $etiquette)
+    {
+        $this->etiquette[] = $etiquette;
+
+        return $this;
+    }
+
+    /**
+     * Remove etiquette
+     *
+     * @param \Entity\Etiquette $etiquette
+     */
+    public function removeEtiquette(\Entity\Etiquette $etiquette)
+    {
+        $this->etiquette->removeElement($etiquette);
+    }
+
+    /**
+     * Get etiquette
+     *
+     * @return \Doctrine\Common\Collections\Collection
+     */
+    public function getEtiquette()
+    {
+        return $this->etiquette;
+    }
+
+    /**
+     * Add member
+     *
+     * @param \Entity\Member $member
+     *
+     * @return Card
+     */
+    public function addMember(\Entity\Member $member)
+    {
+        $this->member[] = $member;
+
+        return $this;
+    }
+
+    /**
+     * Remove member
+     *
+     * @param \Entity\Member $member
+     */
+    public function removeMember(\Entity\Member $member)
+    {
+        $this->member->removeElement($member);
+    }
+
+    /**
+     * Get member
+     *
+     * @return \Doctrine\Common\Collections\Collection
+     */
+    public function getMember()
+    {
+        return $this->member;
+    }
+
+    /**
+     * Add attachment
+     *
+     * @param \Entity\Attachment $attachment
+     *
+     * @return Card
+     */
+    public function addAttachment(\Entity\Attachment $attachment)
+    {
+        $this->attachment[] = $attachment;
+
+        return $this;
+    }
+
+    /**
+     * Remove attachment
+     *
+     * @param \Entity\Attachment $attachment
+     */
+    public function removeAttachment(\Entity\Attachment $attachment)
+    {
+        $this->attachment->removeElement($attachment);
+    }
+
+    /**
+     * Get attachment
+     *
+     * @return \Doctrine\Common\Collections\Collection
+     */
+    public function getAttachment()
+    {
+        return $this->attachment;
+    }
+
+    /**
+     * Add comment
+     *
+     * @param \Entity\Comment $comment
+     *
+     * @return Card
+     */
+    public function addComment(\Entity\Comment $comment)
+    {
+        $this->comment[] = $comment;
+
+        return $this;
+    }
+
+    /**
+     * Remove comment
+     *
+     * @param \Entity\Comment $comment
+     */
+    public function removeComment(\Entity\Comment $comment)
+    {
+        $this->comment->removeElement($comment);
+    }
+
+    /**
+     * Get comment
+     *
+     * @return \Doctrine\Common\Collections\Collection
+     */
+    public function getComment()
+    {
+        return $this->comment;
+    }
+
+    /**
+     * Add checklist
+     *
+     * @param \Entity\Checklist $checklist
+     *
+     * @return Card
+     */
+    public function addChecklist(\Entity\Checklist $checklist)
+    {
+        $this->checklist[] = $checklist;
+
+        return $this;
+    }
+
+    /**
+     * Remove checklist
+     *
+     * @param \Entity\Checklist $checklist
+     */
+    public function removeChecklist(\Entity\Checklist $checklist)
+    {
+        $this->checklist->removeElement($checklist);
+    }
+
+    /**
+     * Get checklist
+     *
+     * @return \Doctrine\Common\Collections\Collection
+     */
+    public function getChecklist()
+    {
+        return $this->checklist;
+    }
+}

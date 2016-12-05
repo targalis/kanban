@@ -1,0 +1,526 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="utf-8" />
+        <title>s2h kanban</title>
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <meta content="width=device-width, initial-scale=1" name="viewport" />
+        <meta content="" name="description" />
+        <meta content="" name="author" />
+        <link rel="stylesheet" href="{{ app.asset('bower/bootstrap/dist/css/bootstrap.min.css') }}">
+        <link rel="stylesheet" href="{{ app.asset('s2h/style/style.css') }}">
+        <link href="style.css" rel="stylesheet" type="text/css" />
+        <link rel="shortcut icon" href="favicon.ico" />
+    </head>
+    <body>
+
+        <nav class="navbar navbar-default navbar-fixed-top">
+          <div class="container">
+            <div class="navbar-header">
+              <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar" aria-expanded="false" aria-controls="navbar">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+              </button>
+              <a class="navbar-brand" href="#">Project name</a>
+            </div>
+            <div id="navbar" class="collapse navbar-collapse">
+              <ul class="nav navbar-nav">
+                <li class="active"><a href="#">Home</a></li>
+                <li><a href="#about">About</a></li>
+                <li><a href="#contact">Contact</a></li>
+                <li class="dropdown">
+                  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Dropdown <span class="caret"></span></a>
+                  <ul class="dropdown-menu">
+                    <li><a href="#">Action</a></li>
+                    <li><a href="#">Another action</a></li>
+                    <li><a href="#">Something else here</a></li>
+                    <li role="separator" class="divider"></li>
+                    <li class="dropdown-header">Nav header</li>
+                    <li><a href="#">Separated link</a></li>
+                    <li><a href="#">One more separated link</a></li>
+                  </ul>
+                </li>
+              </ul>
+            </div><!--/.nav-collapse -->
+          </div>
+        </nav>
+
+
+        <div class="overflow-wrapper">
+            <ul class="overflow-container">
+				<!-- panel 1 -->
+				{% for panel in panels %}
+				<li class="overflow-cell">
+					<div data-id="{{ panel.id }}" class="overflow-panel container-margin-10">
+						<div class="overflow-panel-title">{{ panel.title }}</div>
+						<ul class="overflow-panel-content">
+							{% for card in panel.card %}
+							<li data-id="card_{{ card.id }}" class="panel-card">
+
+								{% if card.image is not null %}
+								<img alt="100%x200" style="width: 100%; display: block;" src="{{ app.asset('s2h/image/alucard.png') }}">
+								{% endif %}
+
+								{% if card.etiquette|length > 0 %}
+								<div class="panel-card-etiquettes">
+									{% for etiquette in card.etiquette %}
+									<span class="panel-card-etiquettes-etiquette" style="background-color: green;"></span>
+									{% endfor %}
+								</div>
+								{% endif %}
+								<div class="panel-card-title">{{ card.title }}</div>
+								<div class="panel-card-info">
+									<div class="panel-card-info-items">
+										{% if 1==2 %}
+										<span class="btn-xs follow">
+										  <span class="glyphicon glyphicon-eye-open"></span>
+										</span>
+										{% endif %}
+										{% if card.deadline is not null %}
+										<span class="btn-xs btn-primary schedule">
+										  <span class="glyphicon glyphicon-time"></span> {{ card.deadline|date('D m, Y') }}
+										</span>
+										{% endif %}
+										{% if card.description is not null %}
+										<span class="btn-xs description">
+										  <span class="glyphicon glyphicon-align-justify"></span>
+										</span>
+										{% endif %}
+										{% if card.comment|length > 0 %}
+										<span class="btn-xs comment">
+										  <span class="glyphicon glyphicon-align-justify"></span> {{ card.comment|length }}
+										</span>
+										{% endif %}
+										{% if card.attachment|length > 0 %}
+										<span class="btn-xs attachment">
+										  <span class="glyphicon glyphicon-paperclip"></span> {{ card.attachment|length }}
+										</span>
+										{% endif %}
+										{% if card.checklist|length > 0 %}
+										{% set tasks = 0 %}
+										  {% for checklist in card.checklist %}
+										  	{% set tasks = checklist.task|length %}
+										  {% endfor %}
+										<span class="btn-xs checklist">
+										  <span class="glyphicon glyphicon-check"></span>{{ tasks }}
+										</span>
+										{% endif %}
+									</div>
+									{% if card.member|length > 0 %}
+									<div class="panel-card-info-members">
+										{% for member in card.member %}
+										<span class="label">AB</span>
+										{% endfor %}
+									</div>
+									{% endif %}
+								</div>
+							</li>
+							{% endfor %}
+						</ul>
+						<div class="overflow-panel-option">
+							<span class="overlow-panel-add-card">
+								Ajouter une carte...
+							</span>
+						</div>
+					</div>
+				</li>
+				{% endfor %}
+            </ul>
+            <div class="overflow-add-panel">
+				<button type="button" class="btn btn-default btn-sm add-panel">
+					<span class="glyphicon glyphicon-plus" aria-hidden="true"></span>
+					Add new panel
+				</button>
+			</div>
+        </div>
+
+        <!--
+        <footer class="footer">
+          <div class="container">
+            <p class="text-muted">Place sticky footer content here.</p>
+          </div>
+        </footer>
+        -->
+
+        <script src="{{ app.asset('bower/jquery/dist/jquery.min.js') }}"></script>
+        <script src="{{ app.asset('bower/jquery-ui/jquery-ui.min.js') }}"></script>
+        <script src="{{ app.asset('bower/bootstrap/dist/js/bootstrap.min.js') }}"></script>
+        <script type="text/javascript">
+
+            $(document).ready(function() {
+
+            	var overflowContainerRefreshWidth = function() {
+					var containerWidth = 0;
+					$('.overflow-cell').each(function(i){
+						containerWidth += $(this).outerWidth(true);
+					});
+
+					$('.overflow-container').width(containerWidth);
+				};
+
+            	var overflowPanelRefreshPosition = function() {
+					$('.overflow-panel').each(function(i){
+					  	$(this).data('pos', i);
+					  	$(this).find('.overlow-panel-add-card').data('pos', i);
+					});
+				};
+
+            	var overflowpanelResize = function() {
+                   	var panel = $(this).find('.overflow-panel').eq(0);
+
+                   	var container = $('.overflow-container').eq(0);
+
+                   	var panelTitle = panel.find('.overflow-panel-title').eq(0);
+                    var panelContent = panel.find('.overflow-panel-content').eq(0);
+                    var panelOption = panel.find('.overflow-panel-option').eq(0);
+
+                    var panelHeight = panelContent.prop('scrollHeight') + panelTitle.outerHeight(true) + panelOption.outerHeight(true);
+                   	var panelBottom = panel.offset().top + panelHeight;
+                   	var bottomLine = container.offset().top + container.height(); 
+                   	var panelScrollHeight = bottomLine - panel.offset().top - panelTitle.outerHeight(true) - panelOption.outerHeight(true);
+
+                   	// Height setting
+
+                   	panelContent.height('');
+
+                   	if(panelBottom >= bottomLine) {
+                   		panelContent.height(panelScrollHeight);
+
+                   		// second check after height setting
+                   		// if no scroll bar set height again to auto
+                   		if (panelContent.prop('scrollHeight') == panelContent.height()) {
+	                   		panelContent.height('');
+	                   	}
+                   	}
+				};
+
+				var overflowDragAndDrop = function() {
+					
+					// Droppable: cell
+					$(this).droppable({
+						accept: '.overflow-panel',
+						over: function(event, ui) {
+							var current_cell_id = $(this).index();
+							var latest_cell_id = ui.draggable.data('pos');
+							
+							if (current_cell_id != latest_cell_id) {
+								var cell = $(".overflow-cell").eq(latest_cell_id);
+
+								var panel = $('.overflow-panel').filter(function(){
+									return $(this).data('pos') == current_cell_id; 
+								});
+
+								panel.css({left: 0});
+								cell.append(panel);
+
+								panel.data('pos', cell.index());
+
+								$(ui.draggable).data('pos', current_cell_id);
+							}
+						}
+					});
+
+					// Draggable: panel
+					$(this).find('.overflow-panel').draggable({
+						cursor: "pointer",
+						handle: ".overflow-panel-title",
+						zIndex: 10000,
+						containment: ".overflow-container",
+						stop: function(e, ui) {
+							var panel = ui.helper.css({left: 0, top:100});
+							$(".overflow-cell").eq(panel.data('pos')).append(panel);
+
+							// serializer
+							var sorts = '';
+							var separator = '';
+
+							$('.overflow-panel').each(function(){
+								sorts += separator + 'panel[]=' + $(this).data('id');
+								separator = '&';
+							});
+
+							// Save updated positions in databases
+				      		$.ajax({
+				      			url: "{{ app.path('panel_sort') }}",
+				      			data: {panels: sorts},
+				      			dataType: 'json',
+				      			method: 'post',
+				      			success: function(res) {
+				      				if (res.code == 200) {
+				      					
+				      				}
+				      			}
+				      		});
+
+							$(document).trigger('overflowPanelRefreshPosition');
+						}
+					});
+
+					// Sortable: card 
+					$(this).find(".overflow-panel-content").sortable({
+				      	connectWith: ".overflow-panel-content",
+				      	update: function(event, ui) {
+				      		var panelId = $(this).parent().attr('data-id');
+				      		var sorts = $(this).sortable('serialize', {attribute: 'data-id'});
+				      		
+				      		// Save updated positions in databases
+				      		$.ajax({
+				      			url: "{{ app.path('card_sort') }}",
+				      			data: {panel: panelId, cards: sorts},
+				      			dataType: 'json',
+				      			method: 'post',
+				      			success: function(res) {
+				      				if (res.code == 200) {
+				      					
+				      				}
+				      			}
+				      		});
+
+				      		$('.overflow-panel').trigger('overflowpanelResize');
+				      	}
+				    });
+
+					// disable text selection
+				    $(this).on('mouseover', function() {
+				    	$(this).disableSelection();
+				    });
+				};
+
+				// Init binding
+				$(document).bind('overflowContainerRefreshWidth', overflowContainerRefreshWidth);
+				$(document).bind('overflowPanelRefreshPosition', overflowPanelRefreshPosition);
+            	$('.overflow-cell').bind('overflowDragAndDrop', overflowDragAndDrop);
+            	$('.overflow-cell').bind('overflowpanelResize', overflowpanelResize);
+				
+				// Init trigger
+				$(document).trigger('overflowContainerRefreshWidth');
+				$(document).trigger('overflowPanelRefreshPosition');
+            	$(".overflow-cell").trigger('overflowDragAndDrop');
+            	$('.overflow-cell').trigger('overflowpanelResize');
+
+                // Resize cell panel event listener
+                $(window).resize(function(){
+                    $('.overflow-cell').trigger('overflowpanelResize');
+                });
+
+
+                /*-----------*/
+                /* ADD PANEL */
+                /*-----------*/
+
+                /** full template example:
+                var template = '<li class="overflow-cell" style="display:none;">';
+						template += '<div class="overflow-panel container-margin-10">';
+							template += '<div class="overflow-panel-title"></div>';
+							template += '<ul class="overflow-panel-content">';
+								template += '<li class="panel-card></li>';
+							template += '</ul>';
+							template += '<div class="overflow-panel-option">';
+								template += '<span class="overlow-panel-add-card">Ajouter une carte...</span>';
+							template += '</div>';
+						template += '</div>';
+					template += '</li>';
+				*/
+                $(document).on('click', '.overflow-add-panel', function(){
+
+                	var addPanelButton = $(this);
+
+                	// Init panel add button
+                	if (addPanelButton.data('readonly') == true) {
+                		return;
+                	}
+
+                	// Lock panel add button
+                	if (addPanelButton.data('readonly') == undefined || addButton.data('readonly') == false) {
+                		addPanelButton.data('readonly', true);
+                	}
+
+                	var template = '<li class="overflow-cell">';
+						template += '<div class="overflow-panel container-margin-10">';
+							template += '<div class="overflow-panel-title">';
+								template += '<form class="new-panel-form" action="{{ app.path('panel_add') }}" method="post">';
+        							template += '<input type="text" name="title" placeholder="Enter your title" />';
+	            				template += '</form>';
+							template += '</div>';
+						template += '</div>';
+						template += '</li>';
+
+					template = $(template);
+
+					var templateContent = '<ul class="overflow-panel-content"></ul>';
+
+					var	templateOption 	= '<div class="overflow-panel-option">';
+							templateOption += '<span class="overlow-panel-add-card">Ajouter une carte...</span>';
+						templateOption += '</div>';
+
+                	//template.find(".overflow-panel-title").text("title: new panel");
+                	template.appendTo(".overflow-container");
+
+                	// bind new item
+                	template.bind('overflowDragAndDrop', overflowDragAndDrop);
+            		template.bind('overflowpanelResize', overflowpanelResize);
+
+            		// trigger new item: only refresh width
+            		$(document).trigger('overflowContainerRefreshWidth');
+
+            		// autofocus and remove autocomplete
+                	template.find('input[name="title"]').focus();
+                	template.find('input[name="title"]').attr('autocomplete', "off");
+
+                	// On click focus input 
+                	template.click(function(){
+                		$(this).find('input[name="title"]').focus();
+                	});
+
+                	// Submit
+                	template.find('.new-panel-form').submit(function(){
+                		var form = $(this);
+                		var title = form.find('input[name="title"]').val();
+
+                		// Save new panel in databases
+                		$.ajax({
+                			url: form.attr('action'),
+                			data: {title: title},
+                			method: form.attr('method'),
+                			dataType: 'json',
+                			success: function(res){
+                				if (res.code == 200) {
+			                		// Display update
+			                		form.remove();
+
+			                		template.find('.overflow-panel-title').html(title);
+			                		template.find('.overflow-panel').append(templateContent);
+			                		template.find('.overflow-panel').append(templateOption);
+
+			                		// Set panel data-id attr for sortable
+			                		template.find('.overflow-panel').attr('data-id', res.extras.id);
+
+			                		// Refresh all panel position
+	                				$(document).trigger('overflowPanelRefreshPosition');
+            						template.trigger('overflowDragAndDrop');
+
+            						// Unlock panel add button
+            						addPanelButton.data('readonly', false);
+	                			} else {
+	                				alert(res.errors.title);
+	                			}
+                			}
+                		});
+
+                		return false;
+                	});
+                });
+
+                /*----------*/
+                /* ADD CARD */
+                /*----------*/
+
+                $(document).on('click', '.overlow-panel-add-card', function(){
+                	
+                	// remove all existing new-card class before
+                	// start a new one
+                	$('.new-card').remove();
+                	$('.overflow-panel-option').show();
+
+                	// Init variable
+                	var pos = $(this).data('pos');
+                	var cell = $('.overflow-cell').eq(pos);
+                	var panel = cell.find(".overflow-panel").eq(0);
+                	var panelId = panel.data('id');
+
+                	var template = '<li class="panel-card new-card">';
+            				template += '<form class="new-card-form" action="{{ app.path('card_add') }}" method="post">';
+            					template += '<div class="title-wrapper">';
+            						template += '<input type="text" name="title" placeholder="Enter your title" />';
+            					template += '</div>';
+            					template += '<div class="submit-wrapper">';
+            						template += '<input class="btn btn-default" type="submit" value="Add">';
+            						template +=	'<span class="btn btn-md pull-right cancel-new-card">';
+										template +=	'<span class="glyphicon glyphicon-remove"></span>';
+									template +=	'</span>';
+
+            					template += '</div>';
+            				template += '</form>';
+                		template += '</li>';
+
+                	template = $(template);
+
+                	var templateTitle = '<div class="panel-card-title"></div>';
+
+                	var templateInfo = '<div class="panel-card-info">';
+							templateInfo +=	'<div class="panel-card-info-items"></div>';
+						templateInfo += '</div>';
+						
+                	// Display update
+                	panel.find('.overflow-panel-option').hide();
+
+                	template.appendTo(panel.find('.overflow-panel-content'));
+
+                	// Resize cell panel height
+                	cell.trigger('overflowpanelResize');
+
+                	// autofocus and remove autocomplete
+                	template.find('input[name="title"]').focus();
+                	template.find('.new-card-form input[name="title"]').attr('autocomplete', "off");
+
+                	// On click focus input 
+                	template.click(function(){
+                		$(this).find('input[name="title"]').focus();
+                	});
+
+                	// Cancel
+                	template.find('.cancel-new-card').on('click', function(){
+	                	// remove all existing new-card class
+	                	$('.new-card').remove();
+	                	$('.overflow-panel-option').show();
+
+	                	// Resize panel height
+	                	cell.trigger('overflowpanelResize');
+	                });
+
+                	// Submit
+                	template.find('.new-card-form').submit(function(){
+                		var form = $(this);
+                		var title = form.find('input[name="title"]').val();
+
+                		// Save new card in databases
+                		$.ajax({
+                			url: form.attr('action'),
+                			data: {panel: panelId, title: title},
+                			method: form.attr('method'),
+                			dataType: 'json',
+                			success: function(res){
+
+                				if (res.code == 200) {
+                					form.remove();
+
+	                				template.append(templateTitle);
+	                				template.append(templateInfo);
+
+	                				// Set new title
+			                		template.find('.panel-card-title').html(title);
+
+			                		// Display update
+			                		panel.find('.overflow-panel-option').show();
+			                		template.removeClass('new-card');
+			                		
+			                		// Set card data-id attr for sortable
+			                		template.attr('data-id', 'card_'+ res.extras.id);
+
+			                		// Resize cell panel one more time when it's done
+	                				cell.trigger('overflowpanelResize');
+	                			} else {
+	                				alert(res.errors.title);
+	                			}
+                			}
+                		});
+
+                		return false;
+                	});
+                });
+            });
+        </script>
+    </body>
+</html>

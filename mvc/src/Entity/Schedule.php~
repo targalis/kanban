@@ -1,0 +1,131 @@
+<?php
+
+namespace Entity;
+
+use Doctrine\ORM\Mapping as ORM;
+
+/**
+ * Schedule
+ *
+ * @ORM\Table(name="schedule", indexes={@ORM\Index(name="fk_schedule_card_idx", columns={"card"})})
+ * @ORM\Entity
+ */
+class Schedule
+{
+    /**
+     * @var integer
+     *
+     * @ORM\Column(name="id", type="integer", nullable=false)
+     * @ORM\Id
+     * @ORM\GeneratedValue(strategy="IDENTITY")
+     */
+    private $id;
+
+    /**
+     * @var \DateTime
+     *
+     * @ORM\Column(name="deadline", type="date", nullable=true)
+     */
+    private $deadline;
+
+    /**
+     * @var integer
+     *
+     * @ORM\Column(name="status", type="integer", nullable=false)
+     */
+    private $status;
+
+    /**
+     * @var \Entity\Card
+     *
+     * @ORM\ManyToOne(targetEntity="Entity\Card")
+     * @ORM\JoinColumns({
+     *   @ORM\JoinColumn(name="card", referencedColumnName="id")
+     * })
+     */
+    private $card;
+
+
+
+    /**
+     * Get id
+     *
+     * @return integer
+     */
+    public function getId()
+    {
+        return $this->id;
+    }
+
+    /**
+     * Set deadline
+     *
+     * @param \DateTime $deadline
+     *
+     * @return Schedule
+     */
+    public function setDeadline($deadline)
+    {
+        $this->deadline = $deadline;
+
+        return $this;
+    }
+
+    /**
+     * Get deadline
+     *
+     * @return \DateTime
+     */
+    public function getDeadline()
+    {
+        return $this->deadline;
+    }
+
+    /**
+     * Set status
+     *
+     * @param integer $status
+     *
+     * @return Schedule
+     */
+    public function setStatus($status)
+    {
+        $this->status = $status;
+
+        return $this;
+    }
+
+    /**
+     * Get status
+     *
+     * @return integer
+     */
+    public function getStatus()
+    {
+        return $this->status;
+    }
+
+    /**
+     * Set card
+     *
+     * @param \Entity\Card $card
+     *
+     * @return Schedule
+     */
+    public function setCard(\Entity\Card $card = null)
+    {
+        $this->card = $card;
+
+        return $this;
+    }
+
+    /**
+     * Get card
+     *
+     * @return \Entity\Card
+     */
+    public function getCard()
+    {
+        return $this->card;
+    }
+}
